@@ -52,7 +52,7 @@ with torch.no_grad():
     Entropy = cal_entropy(A)
 print(Entropy)
 ```
-## Acknowledgement
+## Citation
 
 
 
