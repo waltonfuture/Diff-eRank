@@ -52,6 +52,23 @@ with torch.no_grad():
     Entropy = cal_entropy(A)
 print(Entropy)
 ```
+### Matrix Entropy of Single Sentence
+```
+cd utils
+
+python entropy_single_sentence.py
+```
+
+### Matrix Entropy of Dataset
+
+Please download the datasets of [wiki-en](https://huggingface.co/datasets/wikipedia), [dolly-15k](https://huggingface.co/datasets/databricks/databricks-dolly-15k), [openwebtext2](https://huggingface.co/datasets/suolyer/pile_openwebtext2), [hh-rlhf](https://huggingface.co/datasets/Anthropic/hh-rlhf) in huggingface and edit the data path in your scripts.
+
+```
+cd utils
+
+python entropy_dataset.py
+```
+
 ## Citation
 
 
