@@ -8,8 +8,7 @@
 
 ## Introduction
 We introduce matrix entropy, a novel metric rooted in information theory and geometry principles to quantify the data compression proficiency in LLMs. It reflects the model's ability to extract relevant information and eliminate unnecessary elements, thereby providing insight into the language model's intrinsic capability. 
-Specifically, we demonstrate its applicability in both single-modal (language) and multi-modal settings. For language models, our findings reveal that the matrix entropy of representations follows a scaling law type reduction when the model scales up, serving as a complement to the traditional loss scaling law. For the multi-modal setting, we also propose an evaluation method based on matrix entropy for assessing alignment quality and we find that modern large multi-modal models exhibit great alignment performance. 
-
+Specifically, we demonstrate its applicability in both single-modal (language) and multi-modal settings. For language models, our findings reveal that the matrix entropy of representations follows a scaling law type reduction when the model scales up, serving as a complement to the traditional loss scaling law. For multi-modal models, we also propose an evaluation method based on matrix entropy for assessing alignment quality and we find that modern multi-modal large language models exhibit good alignment performance. 
 
 ## Calculation of Matrix Entropy
 ```bash
@@ -71,16 +70,12 @@ python entropy_dataset.py
 
 ## Citation
 
-
-
 If you're using Matrix Entropy in your research or applications, please cite using this BibTeX:
 ```bibtex
-@misc{wei2024large,
-      title={Large Language Model Evaluation via Matrix Entropy}, 
-      author={Lai Wei and Zhiquan Tan and Chenghai Li and Jindong Wang and Weiran Huang},
-      year={2024},
-      eprint={2401.17139},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@article{wei2024large,
+  title={Large Language Model Evaluation via Matrix Entropy},
+  author={Wei, Lai and Tan, Zhiquan and Li, Chenghai and Wang, Jindong and Huang, Weiran},
+  journal={arXiv preprint arXiv:2401.17139},
+  year={2024}
 }
 ```
