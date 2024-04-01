@@ -3,7 +3,7 @@
 
 **Shanghai Jiao Tong University & Tsinghua University & Microsoft Research Asia**
 
-<a href='https://arxiv.org/abs/2401.17139'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> 
+<a href='https://arxiv.org/abs/2401.17139'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://zhuanlan.zhihu.com/p/687278237'><img src='https://img.shields.io/badge/Project-Link-Green'></a>
 
 
 ## Introduction
