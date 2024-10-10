@@ -12,6 +12,14 @@ Specifically, we demonstrate its applicability in both single-modal (language) a
 For multi-modal models, we also propose an evaluation method based on rank for assessing alignment quality and we find that modern multi-modal large language models exhibit good alignment performance. 
 
 ## Calculation of Diff-eRank
+
+### Setup
+```bash
+pip install transformers torch datasets
+```
+
+### Calculation
+
 ```bash
 from transformers import AutoTokenizer, AutoModel, AutoConfig
 import torch
