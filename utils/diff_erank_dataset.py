@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, GPT2LMHeadModel, GPT2Model, AutoModel
+from transformers import AutoTokenizer, AutoModel, AutoConfig
 import torch
 import math
 import json
@@ -24,11 +24,11 @@ def cal_cov(R):
 def cal_entropy(A):
     with torch.no_grad():
         eig_val = torch.svd(A / torch.trace(A))[1] 
-        #entropy = - (eig_val * torch.log(eig_val)).nansum().cpu().item()   
         entropy = - (eig_val * torch.log(eig_val)).nansum().item()
-        normalized_entropy = entropy/math.log(A.shape[0])
-        normalized_entropy1 = math.exp(entropy)/A.shape[0]
-    return normalized_entropy, normalized_entropy1
+    return entropy
+
+def compute(R):
+    return cal_entropy(cal_cov(normalize(R)))
 
 def jsonl_to_list(filename):
     data_list = []
@@ -41,15 +41,11 @@ def jsonl_to_list(filename):
     return data_list
 
 def main(args):
-    if args.model == "gpt":
-        model_path = f"cerebras/Cerebras-GPT-{args.size}" # 111M 256M 590M 1.3B 2.7B 6.7B 13B
-    elif args.model == "pythia":
-        model_path = f"EleutherAI/pythia-{args.size}" # 14m 70m 160m 410m 1b 1.4b 2.8b 6.9b 12b
-    else:
-        pass
-
+    model_path = "facebook/opt-1.3b" # for example
     tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModel.from_pretrained(model_path, device_map="auto")
+    model = AutoModel.from_pretrained(model_path).cuda()
+    config = AutoConfig.from_pretrained(model_path)
+    untrained_model = AutoModel.from_config(config).to('cuda')
     input_ids = []
 
     if args.dataset == "dolly":
@@ -100,36 +96,23 @@ def main(args):
             input_ids.append(inputs)
 
     
-    ls1, ls2, ls3 = [], [], []
-    with tqdm.tqdm(input_ids, desc="Entropy: - ") as progress:
+    ls1, ls2 = [], []
+    with tqdm.tqdm(input_ids) as progress:
         for id in progress:
             with torch.no_grad():
-                r = model(id.cuda())[0][0, :, :]
-                R = normalize(r)
-                A = cal_cov(R)
-                Entropy1, Entropy3 = cal_entropy(A)
-                ls1.append(Entropy1)
-                ls3.append(Entropy3)
-            torch.cuda.empty_cache()
-            progress.set_description(f"Entropy: {Entropy1:.4f}")
-
-    entropy_avg1 = sum(ls1) / len(ls1)
-    print(A.shape[0])
-    dim = A.shape[0]
-    entropy_avg2 = math.exp(entropy_avg1 * math.log(dim)) / dim
-    entropy_avg3 = sum(ls3) / len(ls3)
-    print(f'alg a: {entropy_avg1}')
-    print(f'alg b: {entropy_avg2}')
-    print(f'alg c: {entropy_avg3}')
- 
-
- 
+                R1 = model(id.cuda())[0][0, :, :]
+                entropy1 = compute(R1)
+                R2 = untrained_model(id.cuda())[0][0, :, :]
+                entropy2 = compute(R2)
+                ls1.append(entropy1)
+                ls2.append(entropy2)
+    erank1 = math.exp(sum(ls1) / len(ls1))
+    erank2 = math.exp(sum(ls2) / len(ls2))
+    print(erank2 - erank1) 
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='simple distributed training job')
-    parser.add_argument("--model", type=str, default="gpt")
-    parser.add_argument("--size", type=str, default="111M")
+    parser = argparse.ArgumentParser(description='Diff-eRank of dataset')
     parser.add_argument("--dataset", type=str, default="dolly")
     args = parser.parse_args()
     

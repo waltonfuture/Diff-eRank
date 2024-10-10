@@ -1,4 +1,4 @@
-# Large Language Model Evaluation via Matrix Entropy
+# Diff-eRank: A Novel Rank-Based Metric for Evaluating Large Language Models (NeurIPS 2024)
 [Lai Wei](https://waltonfuture.github.io/) *, Zhiquan Tan *, Chenghai Li, [Jindong Wang](https://jd92.wang/), [Weiran Huang](https://www.weiranhuang.com/) (*Equal Contribution).
 
 **Shanghai Jiao Tong University & Tsinghua University & Microsoft Research Asia**
@@ -7,12 +7,13 @@
 
 
 ## Introduction
-We introduce matrix entropy, a novel metric rooted in information theory and geometry principles to quantify the data compression proficiency in LLMs. It reflects the model's ability to extract relevant information and eliminate unnecessary elements, thereby providing insight into the language model's intrinsic capability. 
-Specifically, we demonstrate its applicability in both single-modal (language) and multi-modal settings. For language models, our findings reveal that the matrix entropy of representations follows a scaling law type reduction when the model scales up, serving as a complement to the traditional loss scaling law. For multi-modal models, we also propose an evaluation method based on matrix entropy for assessing alignment quality and we find that modern multi-modal large language models exhibit good alignment performance. 
+We introduce a rank-based metric called Diff-eRank, which is rooted in information theory and geometry principles. Diff-eRank evaluates LLMs by examining their hidden representations to quantify how LLMs discard redundant information after training.
+Specifically, we demonstrate its applicability in both single-modal (language) and multi-modal settings. For language models, our findings reveal that the Diff-eRank increases when the model scales up, which also demonstrates a consistent relationship with traditional metrics like loss and accuracy.
+For multi-modal models, we also propose an evaluation method based on rank for assessing alignment quality and we find that modern multi-modal large language models exhibit good alignment performance. 
 
-## Calculation of Matrix Entropy
+## Calculation of Diff-eRank
 ```bash
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, AutoConfig
 import torch
 import math
 
@@ -31,46 +32,52 @@ def cal_cov(R):
         A = torch.matmul(Z.T, Z)/Z.shape[0]
     return A
 
-def cal_entropy(A):
+def cal_erank(A):
     with torch.no_grad():
         eig_val = torch.svd(A / torch.trace(A))[1] 
         entropy = - (eig_val * torch.log(eig_val)).nansum().item()
-        normalized_entropy = entropy/math.log(A.shape[0])
-    return normalized_entropy
+        erank = math.exp(entropy)
+    return erank
 
-model_path = "cerebras/Cerebras-GPT-1.3B" # for example
+def compute(R):
+    return cal_erank(cal_cov(normalize(R)))
+
+model_path = "facebook/opt-1.3b" # for example
 tokenizer = AutoTokenizer.from_pretrained(model_path)
-model = AutoModel.from_pretrained(model_path, device_map="auto").cuda()
+model = AutoModel.from_pretrained(model_path).cuda()
+config = AutoConfig.from_pretrained(model_path)
+untrained_model = AutoModel.from_config(config).to('cuda')
 
-text = "I love Generative AI very much." # for example
+text = "We introduce a rank-based metric called Diff-eRank, which is rooted in information theory and geometry principles. Diff-eRank evaluates LLMs by examining their hidden representations to quantify how LLMs discard redundant information after training." # for example
 inputs = tokenizer(text, return_tensors="pt").to('cuda')
 with torch.no_grad():
-    R = model(inputs.input_ids)[0][0, :, :]
-    R = normalize(R)
-    A = cal_cov(R)
-    Entropy = cal_entropy(A)
-print(Entropy)
+    R1 = model(inputs.input_ids)[0][0, :, :]
+    R2 = untrained_model(inputs.input_ids)[0][0, :, :]
+    erank1 = compute(R1)
+    erank2 = compute(R2)
+    RD = erank2 - erank1
+print(RD)
 ```
-### Matrix Entropy of Single Sentence
+### Diff-eRank of Single Sentence
 ```
 cd utils
 
-python entropy_single_sentence.py
+python diff_erank_single_sentence.py
 ```
 
-### Matrix Entropy of Dataset
+### Diff-eRank of Dataset
 
 Please download the datasets of [wiki-en](https://huggingface.co/datasets/wikipedia), [dolly-15k](https://huggingface.co/datasets/databricks/databricks-dolly-15k), [openwebtext2](https://huggingface.co/datasets/suolyer/pile_openwebtext2), [hh-rlhf](https://huggingface.co/datasets/Anthropic/hh-rlhf) in huggingface and edit the data path in your scripts.
 
 ```
 cd utils
 
-python entropy_dataset.py
+python diff_erank_dataset.py
 ```
 
 ## Citation
 
-If you're using Matrix Entropy in your research or applications, please cite using this BibTeX:
+If you're using Diff-eRank in your research or applications, please cite using this BibTeX:
 ```bibtex
 @article{wei2024large,
   title={Large Language Model Evaluation via Matrix Entropy},
