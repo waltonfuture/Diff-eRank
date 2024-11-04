@@ -1,7 +1,7 @@
 # Diff-eRank: A Novel Rank-Based Metric for Evaluating Large Language Models (NeurIPS 2024)
 [Lai Wei](https://waltonfuture.github.io/) *, Zhiquan Tan *, Chenghai Li, [Jindong Wang](https://jd92.wang/), [Weiran Huang](https://www.weiranhuang.com/) (*Equal Contribution).
 
-**Shanghai Jiao Tong University & Tsinghua University & Microsoft Research Asia**
+**Shanghai Jiao Tong University & Tsinghua University & William and Mary**
 
 <a href='https://arxiv.org/abs/2401.17139'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> <a href='https://zhuanlan.zhihu.com/p/4920383227'><img src='https://img.shields.io/badge/Project-Link-Green'></a>
 
