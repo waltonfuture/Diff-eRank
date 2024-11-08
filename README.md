@@ -11,6 +11,10 @@ We introduce a rank-based metric called Diff-eRank, which is rooted in informati
 Specifically, we demonstrate its applicability in both single-modal (language) and multi-modal settings. For language models, our findings reveal that the Diff-eRank increases when the model scales up, which also demonstrates a consistent relationship with traditional metrics like loss and accuracy.
 For multi-modal models, we also propose an evaluation method based on rank for assessing alignment quality and we find that modern multi-modal large language models exhibit good alignment performance. 
 
+<p align="center">
+  <img src="https://notes.sjtu.edu.cn/uploads/upload_e801b753d216de544fb4442c16d7d6de.png" alt="Image description" width="40%">
+</p>
+
 ## Calculation of Diff-eRank
 
 ### Setup
