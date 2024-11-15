@@ -91,19 +91,10 @@ python diff_erank_dataset.py
 
 If you're using Diff-eRank in your research or applications, please cite using this BibTeX:
 ```bibtex
-@inproceedings{
-  wei2024differank,
+@inproceedings{weidiff,
   title={Diff-eRank: A Novel Rank-Based Metric for Evaluating Large Language Models},
-  author={Lai Wei and Zhiquan Tan and Chenghai Li and Jindong Wang and Weiran Huang},
-  booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
-  year={2024},
-  url={https://openreview.net/forum?id=nvn80cscVm}
-}
-
-@article{wei2024large,
-  title={Large Language Model Evaluation via Matrix Entropy},
   author={Wei, Lai and Tan, Zhiquan and Li, Chenghai and Wang, Jindong and Huang, Weiran},
-  journal={arXiv preprint arXiv:2401.17139},
+  booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
   year={2024}
 }
 ```
