@@ -15,7 +15,7 @@ For multi-modal models, we also propose an evaluation method based on rank for a
   <img src="https://notes.sjtu.edu.cn/uploads/upload_e801b753d216de544fb4442c16d7d6de.png" alt="Image description" width="40%">
 </p>
 
-## Calculation of Diff-eRank
+## Calculation of Diff-eRank for LLMs
 
 ### Setup
 ```bash
@@ -86,6 +86,10 @@ cd utils
 
 python diff_erank_dataset.py
 ```
+
+## Calculate eRank for MLLMs
+
+We provide an example script to calculate eRank for Qwen2.5-VL. Please check it in ```utils/erank-qwen2_5_vl.py```
 
 ## Citation
 
